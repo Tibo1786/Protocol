@@ -1,0 +1,145 @@
+// This is your Prisma schema file — single source of truth for the data model.
+// RLS policies are applied via migrations; never bypass with the service role key.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model Organisation {
+  id        String   @id @default(cuid())
+  name      String
+  slug      String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  members OrgMember[]
+  rules   Rule[]
+
+  @@map("organisations")
+}
+
+model User {
+  id            String   @id @default(cuid())
+  email         String   @unique
+  name          String?
+  emailVerified Boolean  @default(false)
+  image         String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  sessions  Session[]
+  accounts  Account[]
+  memberships OrgMember[]
+
+  @@map("users")
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  userId    String
+  token     String   @unique
+  expiresAt DateTime
+  ipAddress String?
+  userAgent String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+model Account {
+  id                    String    @id @default(cuid())
+  userId                String
+  accountId             String
+  providerId            String
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("accounts")
+}
+
+model Verification {
+  id         String   @id @default(cuid())
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@map("verifications")
+}
+
+model OrgMember {
+  id             String   @id @default(cuid())
+  organisationId String
+  userId         String
+  role           OrgRole  @default(VIEWER)
+  createdAt      DateTime @default(now())
+
+  organisation Organisation @relation(fields: [organisationId], references: [id], onDelete: Cascade)
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([organisationId, userId])
+  @@map("org_members")
+}
+
+model Rule {
+  id             String     @id @default(cuid())
+  organisationId String
+  name           String
+  description    String?
+  yaml           String     // raw YAML authored by the user
+  status         RuleStatus @default(DRAFT)
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
+
+  organisation Organisation   @relation(fields: [organisationId], references: [id], onDelete: Cascade)
+  evaluations  EvaluationLog[]
+
+  @@map("rules")
+}
+
+model EvaluationLog {
+  id             String   @id @default(cuid())
+  organisationId String
+  ruleId         String?
+  payload        Json     // input JSON
+  matched        Boolean
+  action         String?
+  conditions     Json?    // snapshot of matched conditions
+  createdAt      DateTime @default(now())
+
+  rule Rule? @relation(fields: [ruleId], references: [id], onDelete: SetNull)
+
+  @@map("evaluation_logs")
+}
+
+enum OrgRole {
+  OWNER
+  ADMIN
+  EDITOR
+  VIEWER
+}
+
+enum RuleStatus {
+  DRAFT
+  ACTIVE
+  ARCHIVED
+}
