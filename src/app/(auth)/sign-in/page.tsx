@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { signIn } from "@/lib/auth-client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -16,6 +17,7 @@ import {
 } from "@/components/ui/card";
 
 export function SignInPage() {
+  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -30,12 +32,13 @@ export function SignInPage() {
       const { error: authError } = await signIn.email({
         email,
         password,
-        callbackURL: "/rules",
       });
 
       if (authError) {
         setError(authError.message ?? "Failed to sign in");
         setIsPending(false);
+      } else {
+        router.push("/rules");
       }
     } catch (e) {
       setError(e instanceof Error ? e.message : "Failed to sign in");

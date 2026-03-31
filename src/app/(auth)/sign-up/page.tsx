@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { signUp } from "@/lib/auth-client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -16,6 +17,7 @@ import {
 } from "@/components/ui/card";
 
 export function SignUpPage() {
+  const router = useRouter();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -32,12 +34,13 @@ export function SignUpPage() {
         name,
         email,
         password,
-        callbackURL: "/onboarding",
       });
 
       if (authError) {
         setError(authError.message ?? "Failed to create account");
         setIsPending(false);
+      } else {
+        router.push("/onboarding");
       }
     } catch (e) {
       setError(e instanceof Error ? e.message : "Failed to create account");
