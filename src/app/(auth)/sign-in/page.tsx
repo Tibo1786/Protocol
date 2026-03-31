@@ -26,14 +26,19 @@ export function SignInPage() {
     setError(null);
     setIsPending(true);
 
-    const { error: authError } = await signIn.email({
-      email,
-      password,
-      callbackURL: "/rules",
-    });
+    try {
+      const { error: authError } = await signIn.email({
+        email,
+        password,
+        callbackURL: "/rules",
+      });
 
-    if (authError) {
-      setError(authError.message ?? "Failed to sign in");
+      if (authError) {
+        setError(authError.message ?? "Failed to sign in");
+        setIsPending(false);
+      }
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Failed to sign in");
       setIsPending(false);
     }
   }

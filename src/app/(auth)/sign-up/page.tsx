@@ -27,15 +27,20 @@ export function SignUpPage() {
     setError(null);
     setIsPending(true);
 
-    const { error: authError } = await signUp.email({
-      name,
-      email,
-      password,
-      callbackURL: "/onboarding",
-    });
+    try {
+      const { error: authError } = await signUp.email({
+        name,
+        email,
+        password,
+        callbackURL: "/onboarding",
+      });
 
-    if (authError) {
-      setError(authError.message ?? "Failed to create account");
+      if (authError) {
+        setError(authError.message ?? "Failed to create account");
+        setIsPending(false);
+      }
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Failed to create account");
       setIsPending(false);
     }
   }
