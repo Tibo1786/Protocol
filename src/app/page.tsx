@@ -5,12 +5,15 @@ import { auth } from "@/lib/auth";
 import { buttonVariants } from "@/components/ui/button";
 
 export async function HomePage() {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
-
-  if (session?.session.activeOrganizationId) {
-    redirect("/rules");
+  try {
+    const session = await auth.api.getSession({
+      headers: await headers(),
+    });
+    if (session?.session.activeOrganizationId) {
+      redirect("/rules");
+    }
+  } catch {
+    // No valid session — render landing page
   }
 
   return (
