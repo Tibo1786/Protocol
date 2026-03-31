@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { signIn } from "@/lib/auth-client";
+import { signIn, authClient } from "@/lib/auth-client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -38,7 +38,12 @@ export function SignInPage() {
         setError(authError.message ?? "Failed to sign in");
         setIsPending(false);
       } else {
-        router.push("/rules");
+        const { data: session } = await authClient.getSession();
+        if (session?.session.activeOrganizationId) {
+          router.push("/rules");
+        } else {
+          router.push("/onboarding");
+        }
       }
     } catch (e) {
       setError(e instanceof Error ? e.message : "Failed to sign in");
