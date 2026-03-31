@@ -7,8 +7,7 @@ export function proxy(request: NextRequest) {
 
   const isProtected =
     pathname.startsWith("/rules") ||
-    pathname.startsWith("/onboarding") ||
-    pathname === "/";
+    pathname.startsWith("/onboarding");
   const isAuthPage =
     pathname.startsWith("/sign-in") || pathname.startsWith("/sign-up");
 
