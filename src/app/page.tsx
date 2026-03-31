@@ -2,7 +2,6 @@ import { redirect } from "next/navigation";
 import { headers } from "next/headers";
 import Link from "next/link";
 import { auth } from "@/lib/auth";
-import { buttonVariants } from "@/components/ui/button";
 
 export async function HomePage() {
   try {
@@ -23,10 +22,10 @@ export async function HomePage() {
         <div className="mx-auto flex h-14 max-w-5xl items-center justify-between px-4">
           <span className="font-semibold tracking-tight">Protocolify</span>
           <div className="flex items-center gap-3">
-            <Link href="/sign-in" className={buttonVariants({ variant: "ghost", size: "sm" })}>
+            <Link href="/sign-in" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
               Sign in
             </Link>
-            <Link href="/sign-up" className={buttonVariants({ size: "sm" })}>
+            <Link href="/sign-up" className="inline-flex h-8 items-center rounded-lg bg-primary px-3 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/80">
               Get started
             </Link>
           </div>
@@ -49,10 +48,10 @@ export async function HomePage() {
           managers.
         </p>
         <div className="mt-8 flex items-center justify-center gap-3">
-          <Link href="/sign-up" className={buttonVariants({ size: "lg" })}>
+          <Link href="/sign-up" className="inline-flex h-10 items-center rounded-lg bg-primary px-5 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/80">
             Get started free
           </Link>
-          <Link href="/sign-in" className={buttonVariants({ size: "lg", variant: "outline" })}>
+          <Link href="/sign-in" className="inline-flex h-10 items-center rounded-lg border border-border px-5 text-sm font-medium transition-colors hover:bg-muted">
             Sign in
           </Link>
         </div>
