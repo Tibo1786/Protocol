@@ -88,6 +88,7 @@ export function RulesPage() {
             rule={rule}
             onToggle={handleToggle}
             onDelete={handleDelete}
+            onUpdated={(updated) => setRules((prev) => prev.map((r) => r.id === updated.id ? updated : r))}
           />
         ))}
       </div>
