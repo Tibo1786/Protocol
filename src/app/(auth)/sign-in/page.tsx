@@ -39,11 +39,9 @@ export function SignInPage() {
         setIsPending(false);
       } else {
         const { data: session } = await authClient.getSession();
-        if (session?.session.activeOrganizationId) {
-          router.push("/rules");
-        } else {
-          router.push("/onboarding");
-        }
+        window.location.href = session?.session.activeOrganizationId
+          ? "/rules"
+          : "/onboarding";
       }
     } catch (e) {
       setError(e instanceof Error ? e.message : "Failed to sign in");

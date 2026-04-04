@@ -40,7 +40,7 @@ export function SignUpPage() {
         setError(authError.message ?? "Failed to create account");
         setIsPending(false);
       } else {
-        router.push("/onboarding");
+        window.location.href = "/onboarding";
       }
     } catch (e) {
       setError(e instanceof Error ? e.message : "Failed to create account");
