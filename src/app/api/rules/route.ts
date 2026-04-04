@@ -18,26 +18,26 @@ async function getOrgFromSession() {
   });
 
   if (!session) {
-    return { error: "Unauthorized" as const, organisationId: null };
+    return { error: "Unauthorized" as const, organizationId: null };
   }
 
-  const organisationId = session.session.activeOrganizationId;
-  if (!organisationId) {
-    return { error: "No active organisation" as const, organisationId: null };
+  const organizationId = session.session.activeOrganizationId;
+  if (!organizationId) {
+    return { error: "No active organisation" as const, organizationId: null };
   }
 
-  return { error: null, organisationId };
+  return { error: null, organizationId };
 }
 
 export async function GET() {
-  const { error, organisationId } = await getOrgFromSession();
+  const { error, organizationId } = await getOrgFromSession();
   if (error) {
     const status = error === "Unauthorized" ? 401 : 400;
     return NextResponse.json({ error }, { status });
   }
 
   const rules = await prisma.rule.findMany({
-    where: { organisationId },
+    where: { organizationId },
     orderBy: { priority: "desc" },
   });
 
@@ -45,7 +45,7 @@ export async function GET() {
 }
 
 export async function POST(request: NextRequest) {
-  const { error, organisationId } = await getOrgFromSession();
+  const { error, organizationId } = await getOrgFromSession();
   if (error) {
     const status = error === "Unauthorized" ? 401 : 400;
     return NextResponse.json({ error }, { status });
@@ -74,7 +74,7 @@ export async function POST(request: NextRequest) {
   const rule = await prisma.rule.create({
     data: {
       ...parsed.data,
-      organisationId,
+      organizationId,
     },
   });
 

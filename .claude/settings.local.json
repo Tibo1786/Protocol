@@ -13,7 +13,9 @@
       "Bash(cat /c/Users/Nitropc/Projects/Protocol/src/app/api/auth/[...all]/route.ts)",
       "Bash(npx shadcn@latest init --yes)",
       "Bash(npx shadcn@latest init --yes --defaults)",
-      "Bash(npx shadcn@latest add input label textarea card badge switch --yes)"
+      "Bash(npx shadcn@latest add input label textarea card badge switch --yes)",
+      "Bash(npx dotenv:*)",
+      "Bash(where psql:*)"
     ]
   }
 }

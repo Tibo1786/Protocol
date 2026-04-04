@@ -1,6 +1,6 @@
 export interface Rule {
   id: string;
-  organisationId: string;
+  organizationId: string;
   name: string;
   description: string | null;
   yaml: string;

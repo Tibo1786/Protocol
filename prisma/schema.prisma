@@ -23,18 +23,17 @@ model User {
 }
 
 model Session {
-  id        String   @id @default(cuid())
-  expiresAt DateTime
-  token     String   @unique
-  ipAddress String?
-  userAgent String?
-  userId    String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id                   String   @id @default(cuid())
+  expiresAt            DateTime
+  token                String   @unique
+  ipAddress            String?
+  userAgent            String?
+  userId               String
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+  activeOrganizationId String?  @map("activeOrganisationId")
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  activeOrganisationId String?
 
   @@map("sessions")
 }
@@ -70,7 +69,7 @@ model Verification {
   @@map("verifications")
 }
 
-model Organisation {
+model Organization {
   id        String   @id @default(cuid())
   name      String
   slug      String   @unique
@@ -86,21 +85,21 @@ model Organisation {
 
 model Member {
   id             String   @id @default(cuid())
-  organisationId String
+  organizationId String   @map("organisationId")
   userId         String
   role           String   @default("member")
   createdAt      DateTime @default(now())
 
-  organisation Organisation @relation(fields: [organisationId], references: [id], onDelete: Cascade)
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@unique([organisationId, userId])
+  @@unique([organizationId, userId])
   @@map("members")
 }
 
 model Invitation {
   id             String   @id @default(cuid())
-  organisationId String
+  organizationId String   @map("organisationId")
   email          String
   role           String?
   status         String   @default("pending")
@@ -113,7 +112,7 @@ model Invitation {
 
 model Rule {
   id             String   @id @default(cuid())
-  organisationId String
+  organizationId String   @map("organisationId")
   name           String
   description    String?
   yaml           String
@@ -122,8 +121,8 @@ model Rule {
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
 
-  organisation Organisation @relation(fields: [organisationId], references: [id], onDelete: Cascade)
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
 
-  @@index([organisationId, enabled])
+  @@index([organizationId, enabled])
   @@map("rules")
 }

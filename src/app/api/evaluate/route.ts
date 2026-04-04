@@ -19,8 +19,8 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const organisationId = session.session.activeOrganizationId;
-  if (!organisationId) {
+  const organizationId = session.session.activeOrganizationId;
+  if (!organizationId) {
     return NextResponse.json(
       { error: "No active organisation" },
       { status: 400 },
@@ -38,7 +38,7 @@ export async function POST(request: NextRequest) {
   }
 
   const where: Record<string, unknown> = {
-    organisationId,
+    organizationId,
     enabled: true,
   };
 

@@ -21,11 +21,11 @@ if (process.env.NODE_ENV !== "production") {
  * Uses SET LOCAL so the GUC is automatically cleared at transaction end.
  */
 export async function withOrg<T>(
-  organisationId: string,
+  organizationId: string,
   fn: (tx: Omit<PrismaClient, "$connect" | "$disconnect" | "$on" | "$transaction" | "$use" | "$extends">) => Promise<T>,
 ): Promise<T> {
   return prisma.$transaction(async (tx) => {
-    await tx.$executeRaw`SELECT set_config('app.current_org_id', ${organisationId}, TRUE)`;
+    await tx.$executeRaw`SELECT set_config('app.current_org_id', ${organizationId}, TRUE)`;
     return fn(tx);
   });
 }

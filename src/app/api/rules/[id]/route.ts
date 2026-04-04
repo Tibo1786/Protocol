@@ -11,23 +11,23 @@ async function getOrgAndRule(id: string) {
   });
 
   if (!session) {
-    return { error: "Unauthorized" as const, organisationId: null, rule: null };
+    return { error: "Unauthorized" as const, organizationId: null, rule: null };
   }
 
-  const organisationId = session.session.activeOrganizationId;
-  if (!organisationId) {
-    return { error: "No active organisation" as const, organisationId: null, rule: null };
+  const organizationId = session.session.activeOrganizationId;
+  if (!organizationId) {
+    return { error: "No active organisation" as const, organizationId: null, rule: null };
   }
 
   const rule = await prisma.rule.findFirst({
-    where: { id, organisationId },
+    where: { id, organizationId },
   });
 
   if (!rule) {
-    return { error: "Not found" as const, organisationId, rule: null };
+    return { error: "Not found" as const, organizationId, rule: null };
   }
 
-  return { error: null, organisationId, rule };
+  return { error: null, organizationId, rule };
 }
 
 const updateRuleSchema = z.object({
